@@ -1,0 +1,8 @@
+applications:
+- disk_quota: 1024M
+  host: jere-cos-video-test
+  name: jere-cos-video-test
+  path: .
+  domain: eu-de.mybluemix.net
+  instances: 1
+  memory: 512M

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>COS Video Test</title>
+  </head>
+
+  <body>
+    <h1>This is COS test, below should be a video from Cloud object storage</h1>
+<!--
+    <video width="640" height="264" controls preload="auto">
+      <source src="/2/video/Kone_video.mp4" type="video/mp4">
+    </video>
+-->
+
+    <video id="video1" width="640" height=320 controls preload="auto"></video>
+
+    <script>
+
+      var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+      var url = "/3/video/frag_bunny.mp4";
+      var xmlhttp = new XMLHttpRequest();
+
+      function getData(url, start, end){
+
+        if(!end )
+
+        var video = document.getElementById("video1");
+        var mediaSource = new MediaSource();
+        var sourceBuffer = null;
+
+        video.src = URL.createObjectURL(mediaSource);
+        mediaSource.addEventListener('sourceopen', sourceOpen);
+
+        function sourceOpen() {
+          var sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+          /*
+          xmlhttp.onreadystatechange = function(){
+            if(xmlhttp.readyState == 3){
+              console.log(xmlhttp);
+              sourceBuffer.appendBuffer(xmlhttp.response);
+            }
+            else if(xmlhttp.readyState == 4){
+              console.log("All got");
+            }
+          }
+          */
+          xmlhttp.onload = function(){
+            console.log(xmlhttp.readyState);
+            console.log(xmlhttp);
+            sourceBuffer.appendBuffer(xmlhttp.response);
+          }
+
+          xmlhttp.open("GET", url);
+          xmlhttp.setRequestHeader("Range", "bytes=" + start + "-" + end);
+          xmlhttp.responseType = "arraybuffer";
+          xmlhttp.send();
+        }
+
+      }
+
+      getData(url, 0, null);
+    </script>
+
+<!--
+    <script>
+      var video = document.getElementById("video1");
+
+      var assetURL = '/3/video/frag_bunny.mp4';
+      //var assetURL = "/3/video/video-short-nosound.mp4";
+      //var assetURL = "/video/Kone_video.mp4"
+
+      // Need to be specific for Blink regarding codecs
+      // ./mp4info frag_bunny.mp4 | grep Codec
+      var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'; // Bunny video
+      //var mimeCodec = 'video/mp4; codecs="avc1.4D4028"'; // short
+      //var mimeCodec = 'video/mp4; codecs="avc1.640020, mp4a.40.2"'; // Kone
+      //var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2, avc1.640020, avc1.4D4028"';
+      if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
+        var mediaSource = new MediaSource;
+        //console.log(mediaSource.readyState); // closed
+        video.src = URL.createObjectURL(mediaSource);
+        mediaSource.addEventListener('sourceopen', sourceOpen);
+      } else {
+        console.error('Unsupported MIME type or codec: ', mimeCodec);
+      }
+      function sourceOpen (_) {
+        //console.log(this.readyState); // open
+        var mediaSource = this;
+        var sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+        fetchAB(assetURL, function (buf) {
+          sourceBuffer.addEventListener('updateend', function (_) {
+            mediaSource.endOfStream();
+            video.play();
+            //console.log(mediaSource.readyState); // ended
+          });
+          sourceBuffer.appendBuffer(buf);
+        });
+      };
+      function fetchAB (url, cb) {
+        console.log(url);
+        var xhr = new XMLHttpRequest;
+        xhr.open('get', url);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function () {
+          console.log(xhr);
+          cb(xhr.response);
+        };
+        xhr.send();
+      };
+    </script>
+-->
+  </body>
+</html>

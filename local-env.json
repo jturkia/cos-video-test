@@ -1,0 +1,29 @@
+{
+  "cloud-object-storage": [
+        {
+            "credentials": {
+                "apikey": "08mU5c3Y1iZFMvGzyxFuHPIr5UQPQLlQObAl_q_2IPEG",
+                "endpoints": "https://cos-service.bluemix.net/endpoints",
+                "iam_apikey_description": "Auto generated apikey during resource-bind operation for Instance - crn:v1:bluemix:public:cloud-object-storage:global:a/43ebe13b17f4cd29f9adfe2382d07a3d:477912c7-5558-40ae-8d1f-47229a50f136::",
+                "iam_apikey_name": "auto-generated-apikey-a90bc8c3-7dfc-422c-8442-5c2613be00a6",
+                "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Reader",
+                "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/43ebe13b17f4cd29f9adfe2382d07a3d::serviceid:ServiceId-37900d4f-50e3-4f8e-9b20-f20fffdcc629",
+                "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/43ebe13b17f4cd29f9adfe2382d07a3d:477912c7-5558-40ae-8d1f-47229a50f136::"
+            },
+            "syslog_drain_url": null,
+            "volume_mounts": [],
+            "label": "cloud-object-storage",
+            "provider": null,
+            "plan": "Lite",
+            "name": "Jere - Cloud Object Storage",
+            "tags": [
+                "Lite",
+                "storage",
+                "ibm_release",
+                "ibm_created",
+                "rc_compatible",
+                "ibmcloud-alias"
+            ]
+        }
+    ]
+}
