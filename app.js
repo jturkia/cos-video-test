@@ -26,50 +26,19 @@ router.use("/", express.static(__dirname + "/public"));
 router.get("/3/video/:filename", function(req, res){
   var bucket = "jere-video-test"; // Detemine bucket in COS to look file from
   var filename = req.params.filename;
-  var step = 1024 * 2000;
-  cos.headObject({
-      Bucket: bucket,
-      Key: filename
-    }, function(err, data){ // Get metadata of given file (namely content length)
-    if(err) {
-      console.log("Error happened: " + err);
+  cos.getSignedUrl("getObject", {Bucket: bucket, Key: filename, Expires: 60}, function(err, url){
+    if(err){
+      console.log(err);
       res.status(500);
       res.send(err);
     }
-    else {
-      var contentLength = data.ContentLength; // Total length of content
-      var contentType = data.ContentType;
-      console.log("Content length is: " + contentLength);
-      res.set("Content-Length", contentLength);
-      res.set("Content-Type", "video/mp4");
-      getAndSendChunk(bucket, filename, 0, step, step, contentLength, res);
+    else{
+      console.log("Url is: " + url);
+      res.status(200);
+      res.send(url);
     }
   });
 });
-
-function getAndSendChunk(bucket, filename, rangeStart, rangeEnd, step, length, res){
-  var now = Date.now(); // For checking how long it takes
-  if(rangeEnd > length) rangeEnd = length;
-  var range = "bytes=" + rangeStart + "-" + rangeEnd;
-  cos.getObject({
-    Bucket: bucket,
-    Key: filename,
-    ResponseContentType: "video/mp4", // Careful with this, should always match the actual one. They are stored as octet-streams in COS
-    Range: range
-  }, function(err, data){
-    if(err){
-      console.log("Error happened: " + err);
-      res.status(500);
-      res.send(err);
-    }
-    else {
-      console.log("CHUNK: " + range + ", took: " + (Date.now() - now) + "ms");
-      res.write(data.Body);
-      if(rangeEnd >= length) res.end();
-      else getAndSendChunk(bucket, filename, rangeStart + step, rangeEnd + step, step, length, res);
-    }
-  });
-}
 
 router.get("/2/video/:filename", function(req, res){
   var ua = req.headers["user-agent"];
